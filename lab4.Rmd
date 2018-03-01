@@ -1,0 +1,52 @@
+---
+title: "lab4"
+author: 
+ - "Isaac Tetteh"
+ - "Laurence"
+ - "Timothy"
+date: "March 1, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+### Reading Avengers data 
+```{r}
+av <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/avengers/avengers.csv", stringsAsFactors = FALSE)
+str(av)
+```
+```{r}
+#knitr::kable(head(av))
+```
+### Data tidying
+
+```{r}
+Deaths <- av %>% gather(key=Time, value = Death,
+              c(Death1, Death2, Death3,
+                Death4, Death5)) %>%
+              mutate(Time = parse_number(Time)) %>%
+              select(-c(URL,Notes))
+
+Returns <- av %>% gather(key=Time, value = Return,
+                     c(Return1, Return2, Return3,
+                       Return4, Return5)) %>%
+                  mutate(Time = parse_number(Time)) %>%
+                  select(-c(URL,Notes))
+```
+
+```{r}
+knitr::kable(head((Deaths)))
+             
+```
+
+```{r}
+knitr::kable(head(Returns))
+```
+
+```{r}
+total_death <- Deaths %>% filter(Death == "YES") %>% summarise(Total_Death = n()) 
+```
+I was able to verify that, there were ``r total_death`` total deaths.
