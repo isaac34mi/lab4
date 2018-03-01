@@ -1,0 +1,16 @@
+library(tidyverse)
+library(ggplot2)
+
+#Reading in the data
+av <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/avengers/avengers.csv", stringsAsFactors = FALSE)
+
+#gathering on death
+deaths <- av %>% gather(key=Time, value=Death, c(Death1, Death2, Death3, Death4, Death5))%>%
+  mutate(Time = parse_number(Time, na = c("", "NA")))
+#gathering on returns
+returns <- av %>% gather(key=Time, value=Return, c(Return1, Return2, Return3, Return4, Return5)) %>%
+  mutate(Time = parse_number(Time, na = c("", "NA") ))
+
+returns %>% filter(Return == "YES") %>% dim()
+#The above code addresses the statement that "...on 57 occasions the individual made a comeback.
+#By filtering on return and checking the dimensions, we can see we have 57 rows verifying the article's claim
