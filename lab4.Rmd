@@ -1,9 +1,10 @@
 ---
 title: "lab4"
-author: 
+author:
  - "Isaac Tetteh"
- - "Laurence"
- - "Timothy"
+ - "Laurence Vander Werff"
+ - "Joshua Limaye"
+ - "Ruben arias"
 date: "March 1, 2018"
 output: html_document
 ---
@@ -12,41 +13,54 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
+## [Link](https://github.com/isaac34mi/lab4) to github repo.
 
-### Reading Avengers data 
+### Reading and inspecting Avengers data 
 ```{r}
 av <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/avengers/avengers.csv", stringsAsFactors = FALSE)
 str(av)
 ```
 ```{r}
-#knitr::kable(head(av))
+knitr::kable(head(av))
 ```
+
 ### Data tidying
 
+
+##### gathering on death
 ```{r}
-Deaths <- av %>% gather(key=Time, value = Death,
+deaths <- av %>% gather(key=Time, value = Death,
               c(Death1, Death2, Death3,
                 Death4, Death5)) %>%
-              mutate(Time = parse_number(Time)) %>%
+              mutate(Time = parse_number(Time, na = c("", "NA"))) %>%
               select(-c(URL,Notes))
-
-Returns <- av %>% gather(key=Time, value = Return,
+```
+#### gathering on returns
+```{r}
+returns <- av %>% gather(key=Time, value = Return,
                      c(Return1, Return2, Return3,
                        Return4, Return5)) %>%
-                  mutate(Time = parse_number(Time)) %>%
+                  mutate(Time = parse_number(Time, na = c("", "NA"))) %>%
                   select(-c(URL,Notes))
 ```
 
 ```{r}
-knitr::kable(head((Deaths)))
-             
+knitr::kable(head((deaths)))      
 ```
 
 ```{r}
-knitr::kable(head(Returns))
+knitr::kable(head(returns))
 ```
 
+### Statement Validation 
+
 ```{r}
-total_death <- Deaths %>% filter(Death == "YES") %>% summarise(Total_Death = n()) 
+returns %>% filter(Return == "YES") %>% dim()
 ```
-I was able to verify that, there were ``r total_death`` total deaths.
+The above code addresses the statement that "...on 57 occasions the individual made a comeback.   
+By filtering on return and checking the dimensions, we can see we have 57 rows verifying the article's claim
+
+```{r}
+total_death <- deaths %>% filter(Death == "YES") %>% summarise(Total_Death = n()) 
+```
+We were able to verify that, there were ``r total_death`` total deaths.
