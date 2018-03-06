@@ -61,17 +61,14 @@ returns %>% filter(Return == "YES") %>% dim()
 The above code addresses the statement that "...on 57 occasions the individual made a comeback.   
 By filtering on return and checking the dimensions, we can see we have 57 rows verifying the article's claim
 
-```{r}
-total_death <- deaths %>% filter(Death == "YES") %>% summarise(Total_Death = n()) 
-```
-We were able to verify that, there were ``r total_death`` total deaths.
 
 ### Statement 2
 ```{r}
-returns %>% filter(Return == "YES") %>% dim()
-#The above code addresses the statement that "...on 57 occasions the individual made a comeback.
-#By filtering on return and checking the dimensions, we can see we have 57 rows verifying the article's claim
+total_death <- deaths %>% filter(Death == "YES") %>% summarise(Total_Death = n()) 
+total_death
 ```
+We were able to verify that, there were ``r total_death`` total deaths.
+
 
 ### Statement 3
 
