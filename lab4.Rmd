@@ -54,13 +54,43 @@ knitr::kable(head(returns))
 
 ### Statement Validation 
 
+1.
 ```{r}
 returns %>% filter(Return == "YES") %>% dim()
 ```
 The above code addresses the statement that "...on 57 occasions the individual made a comeback.   
 By filtering on return and checking the dimensions, we can see we have 57 rows verifying the article's claim
 
+2.
 ```{r}
 total_death <- deaths %>% filter(Death == "YES") %>% summarise(Total_Death = n()) 
 ```
 We were able to verify that, there were ``r total_death`` total deaths.
+
+3.
+Here we check veracity for the following statement:
+
+"Of the nine Avengers we see on screen — Iron Man, Hulk, Captain America, Thor, Hawkeye, Black Widow, Scarlet Witch, Quicksilver and The Vision — every single one of them has died at least once in the course of their time Avenging in the comics. In fact, Hawkeye died twice"
+
+
+
+```{r}
+av <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/avengers/avengers.csv", stringsAsFactors = FALSE)
+
+qq <- av %>% select(-c(URL,Notes,Return1, Return2, Return3, Return4, Return5))
+
+q <- qq %>% gather(key=Time, value = Death, c(Death1, Death2, Death3, Death4, Death5)) %>%
+                                            mutate(Time = parse_number(Time, na = c("", "NA")))
+
+#check for "every single one of them has died at least once" and "Hawkeye died twice"
+q[grep("Anthony Edward \"Tony\" Stark|Robert Bruce Banner|Steven Rogers|Thor|Clinton Francis|Natalia Alianovna Romanova|Scarlet Witch|Pietro Maximoff|Jonas", deaths$Name.Alias), "special_9"] <- "YES"
+
+q %>% filter(special_9 == "YES") 
+knitr::kable(head(q))
+
+```
+
+From the obtained table we can conclude that
+
+every single one of them has died at least  : TRUE   
+Hawkeye died twice							            : TRUE
